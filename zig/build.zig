@@ -15,14 +15,14 @@ pub fn build(b: *std.Build) void {
     // set a preferred release mode, allowing the user to decide how to optimize.
     const optimize = b.standardOptimizeOption(.{});
 
-    const raylib_dep = b.dependency("raylib-zig", .{
-        .target = target,
-        .optimize = optimize,
-    });
+    //const raylib_dep = b.dependency("raylib-zig", .{
+    //    .target = target,
+    //    .optimize = optimize,
+    //});
 
-    const raylib = raylib_dep.module("raylib");
-    const raygui = raylib_dep.module("raygui");
-    const raylib_artifact = raylib_dep.artifact("raylib");
+    //const raylib = raylib_dep.module("raylib");
+    //const raygui = raylib_dep.module("raygui");
+    //const raylib_artifact = raylib_dep.artifact("raylib");
 
     const lib = b.addStaticLibrary(.{
         .name = "shader-play",
@@ -45,9 +45,11 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
-    exe.linkLibrary(raylib_artifact);
-    exe.root_module.addImport("raylib", raylib);
-    exe.root_module.addImport("raygui", raygui);
+    exe.linkLibC();
+    exe.addObjectFile(b.path("raylib/raylib-5.0_linux_amd64/lib/libraylib.a"));
+    exe.addIncludePath(b.path("raylib/raylib-5.0_linux_amd64/include/"));
+    //exe.root_module.addImport("raylib", raylib);
+    //exe.root_module.addImport("raygui", raygui);
 
     //exe.addIncludePath(b.path("/opt/XIMEA/include/"));
     exe.linkSystemLibrary("m3api");
